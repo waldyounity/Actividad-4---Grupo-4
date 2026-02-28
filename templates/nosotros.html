@@ -1,0 +1,21 @@
+<!-- Llamamos a la plantilla que usaremos -->
+{% extends "plantilla.html" %}
+
+{% block contenido %}
+<h2>Taller Apps - Nosotros</h2>
+<p>En esta seccion encontraras informacion de la pagina</p>
+
+<!-- PARA ENVIAR EL TOKEN DEL FORMULARIO -->
+ <form action="/nosotros" method="post">
+    {{ form.csrf_token() }}
+    {{ form.titulo.label }}
+    {{ form.titulo }}
+    {{ form.enviar }}
+ </form>
+{% if titulo %}
+    <h2>{{ titulo }}</h2>
+{% endif %}
+
+{% endblock %}
+
+
