@@ -9,7 +9,6 @@ import formularios
 #importando el modelo
 from model import Tarea
 
-from flask import request, redirect
 
 #CREAMOS LA RUTA CON LA FUNCION QUE DEVUELVE
 @app.route('/')
@@ -20,24 +19,13 @@ def index():
 @app.route('/nosotros', methods = ['GET', 'POST'])
 def nosotros():
     formulario = formularios.FormAgregarTareas()
-    buscar_formulario = formularios.FormBuscarTareas()
-    resultados = [] # Aquí guardaremos lo que encontremos
-
-    # LÓGICA PARA AGREGAR TAREA
-    if formulario.validate_on_submit() and 'enviar' in request.form:
-        nueva_tarea = Tarea(titulo=formulario.titulo.data)
+    if formulario.validate_on_submit() :
+        nueva_tarea = Tarea(titulo = formulario.titulo.data)
         db.session.add(nueva_tarea)
-        db.session.commit()
-        return redirect('/nosotros')
-
-    # LÓGICA PARA BUSCAR TAREA
-    if buscar_formulario.validate_on_submit() and 'enviar_buscar' in request.form:
-        termino = buscar_formulario.buscar.data
-        # Buscamos coincidencias parciales (LIKE)
-        resultados = Tarea.query.filter(Tarea.titulo.contains(termino)).all()
-
-    return render_template('nosotros.html',form=formulario,buscarform=buscar_formulario,resultados=resultados)
-
+        db.session.commit() 
+        print('Se envio correctamente', formulario.titulo.data)
+        return render_template('nosotros.html', form = formulario, titulo = formulario.titulo.data)
+    return render_template('nosotros.html', form = formulario)
 
 @app.route('/saludo')
 def saludo():
