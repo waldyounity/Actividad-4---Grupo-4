@@ -8,7 +8,7 @@ from app import app, db
 import formularios
 #importando el modelo
 from model import Tarea
-
+from flask import request
 
 #CREAMOS LA RUTA CON LA FUNCION QUE DEVUELVE
 @app.route('/')
@@ -28,10 +28,16 @@ def nosotros():
         # CAMBIADO: Redirigir para evitar reenvío del formulario
         return redirect(url_for('nosotros'))
     
-    # NUEVO: Obtener todas las tareas para mostrarlas
-    tareas = Tarea.query.all()
-    # MODIFICADO: Enviar tareas al template
-    return render_template('nosotros.html', form=formulario, tareas=tareas)
+    #MODIFICADO: Obtener el parámetro de búsqueda
+    search = request.args.get('q')
+    if search:
+        tareas = Tarea.query.filter(Tarea.titulo.contains(search)).all()
+    else:
+        # MANTENIDO: Obtener todas las tareas si no hay búsqueda
+        tareas = Tarea.query.all()
+    
+    # MODIFICADO: Enviar tareas al template, 
+    return render_template('nosotros.html', form=formulario, tareas=tareas, search=search)
 
 @app.route('/saludo')
 def saludo():
@@ -55,3 +61,8 @@ def eliminar(id):
     db.session.delete(tarea_a_eliminar)
     db.session.commit()
     return redirect(url_for('nosotros'))
+
+@app.route('/buscar/<string:titulo>')
+def buscar(titulo):
+    tareas = Tarea.query.filter(Tarea.titulo.contains(titulo)).all()
+    return render_template('nosotros.html', tareas=tareas)

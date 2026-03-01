@@ -18,6 +18,15 @@
 <h3>Tareas Registradas</h3>
 
 {% if tareas %}
+    <!-- AGREGADO: fomrulario simple para hacer la busqueda -->
+    <form action="{{ url_for('nosotros') }}" method="GET" style="margin-bottom: 20px;">
+    <input type="text" name="q" placeholder="Buscar por título..." value="{{ request.args.get('q', '') }}">
+    <button type="submit">Buscar ahora</button>
+    
+    {% if request.args.get('q') %}
+        <a href="{{ url_for('nosotros') }}">Limpiar búsqueda</a>
+    {% endif %}
+</form>
     <table border="1" cellpadding="10" cellspacing="0">
         <thead>
             <tr>
