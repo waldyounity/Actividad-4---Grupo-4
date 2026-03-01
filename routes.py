@@ -41,14 +41,17 @@ def saludo():
 def usuario(nombre):
     return f'Hola {nombre} bienvenido a Taller Apps'
 
-# Ruta para mostrar todas las tareas (OPCIONAL: puedes eliminarla o dejarla)
-@app.route('/tareas')
-def listar_tareas():
-    tareas = Tarea.query.all()
-    return render_template('tareas.html', tareas=tareas)
 
 # Ruta para mostrar una tarea específica (MANTENERLA para ver detalles)
 @app.route('/tarea/<int:id>')
 def mostrar_tarea(id):
     tarea = Tarea.query.get_or_404(id)
     return render_template('mostrar_tarea.html', tarea=tarea)
+
+# NUEVA RUTA PARA ELIMINAR TAREAS
+@app.route('/eliminar/<int:id>', methods=['POST'])
+def eliminar(id):
+    tarea_a_eliminar = Tarea.query.get_or_404(id)
+    db.session.delete(tarea_a_eliminar)
+    db.session.commit()
+    return redirect(url_for('nosotros'))
