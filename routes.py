@@ -1,5 +1,5 @@
 #IMPORTAMOS RENDER TEMPLATE
-from flask import render_template
+from flask import render_template, redirect, url_for  # ← AÑADIDO redirect y url_for
 
 #IMPORTANDO LA APLICACION
 from app import app, db
@@ -19,13 +19,19 @@ def index():
 @app.route('/nosotros', methods = ['GET', 'POST'])
 def nosotros():
     formulario = formularios.FormAgregarTareas()
-    if formulario.validate_on_submit() :
+    
+    if formulario.validate_on_submit():
         nueva_tarea = Tarea(titulo = formulario.titulo.data)
         db.session.add(nueva_tarea)
         db.session.commit() 
         print('Se envio correctamente', formulario.titulo.data)
-        return render_template('nosotros.html', form = formulario, titulo = formulario.titulo.data)
-    return render_template('nosotros.html', form = formulario)
+        # CAMBIADO: Redirigir para evitar reenvío del formulario
+        return redirect(url_for('nosotros'))
+    
+    # NUEVO: Obtener todas las tareas para mostrarlas
+    tareas = Tarea.query.all()
+    # MODIFICADO: Enviar tareas al template
+    return render_template('nosotros.html', form=formulario, tareas=tareas)
 
 @app.route('/saludo')
 def saludo():
@@ -35,13 +41,13 @@ def saludo():
 def usuario(nombre):
     return f'Hola {nombre} bienvenido a Taller Apps'
 
-# Ruta para mostrar todas las tareas
+# Ruta para mostrar todas las tareas (OPCIONAL: puedes eliminarla o dejarla)
 @app.route('/tareas')
 def listar_tareas():
     tareas = Tarea.query.all()
     return render_template('tareas.html', tareas=tareas)
 
-# Ruta para mostrar una tarea específica
+# Ruta para mostrar una tarea específica (MANTENERLA para ver detalles)
 @app.route('/tarea/<int:id>')
 def mostrar_tarea(id):
     tarea = Tarea.query.get_or_404(id)

@@ -3,19 +3,43 @@
 
 {% block contenido %}
 <h2>Taller Apps - Nosotros</h2>
-<p>En esta seccion encontraras informacion de la pagina</p>
+<p>En esta sección encontrarás información de la pagina</p>
 
 <!-- PARA ENVIAR EL TOKEN DEL FORMULARIO -->
- <form action="/nosotros" method="post">
+<form action="/nosotros" method="post">
     {{ form.csrf_token() }}
     {{ form.titulo.label }}
     {{ form.titulo }}
     {{ form.enviar }}
- </form>
-{% if titulo %}
-    <h2>{{ titulo }}</h2>
+</form>
+
+<!-- LISTA DE TAREAS EN TABLA (como pide Waldy) -->
+<hr>
+<h3>Tareas Registradas</h3>
+
+{% if tareas %}
+    <table border="1" cellpadding="10" cellspacing="0">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Título</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for tarea in tareas %}
+            <tr>
+                <td>{{ tarea.id }}</td>
+                <td>{{ tarea.titulo }}</td>
+                <td>
+                    <a href="{{ url_for('mostrar_tarea', id=tarea.id) }}">Ver Detalles</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No hay tareas registradas aún.</p>
 {% endif %}
 
 {% endblock %}
-
-
