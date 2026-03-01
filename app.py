@@ -1,4 +1,4 @@
-#IMPORTANDO LAS LIBRERIAS
+
 from flask import Flask
 
 #IMPORTANDO PARA LA BASE DE DATOS
@@ -21,7 +21,7 @@ with app.app_context():
 #LLAMAMOS A LAS RUTAS
 from routes import *
 
-#ASEGURANDO QUE LA APLICACION SE EJECUTE SOLO SI SE EJECUTA DIRECTAMENTE Y NO DESDE OTRA RUTA O APLICACION
+
 if __name__ == '__main__':
     app.run(debug = True)
     
