@@ -12,29 +12,8 @@
     {{ form.titulo }}
     {{ form.enviar }}
  </form>
- 
 {% if titulo %}
     <h2>{{ titulo }}</h2>
-{% endif %}
-
-<fieldset>
-    <legend>Buscador de Tareas</legend>
-    <form action="/nosotros" method="post">
-        {{ buscarform.csrf_token() }}
-        {{ buscarform.buscar.label }} {{ buscarform.buscar }}
-        <input type="submit" name="enviar_buscar" value="Buscar">
-    </form>
-</fieldset>
-
-{% if resultados %}
-    <h3>Resultados encontrados:</h3>
-    <ul>
-    {% for tarea in resultados %}
-        <li>{{ tarea.titulo }} (ID: {{ tarea.id }})</li>
-    {% endfor %}
-    </ul>
-{% elif request.method == 'POST' and 'enviar_buscar' in request.form %}
-    <p>No se encontraron tareas con ese nombre.</p>
 {% endif %}
 
 {% endblock %}
