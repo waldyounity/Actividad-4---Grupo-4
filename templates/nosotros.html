@@ -33,6 +33,10 @@
                 <td>{{ tarea.titulo }}</td>
                 <td>
                     <a href="{{ url_for('mostrar_tarea', id=tarea.id) }}">Ver Detalles</a>
+
+                    <form action="{{ url_for('eliminar', id=tarea.id) }}" method="POST" style="display:inline-block; margin-left: 10px;">
+                    <button type="submit" onclick="return confirm('¿Estás seguro de que deseas eliminar esta tarea?');">Eliminar</button>
+                </form>
                 </td>
             </tr>
             {% endfor %}
