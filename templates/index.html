@@ -1,10 +1,21 @@
-<!-- Llamamos a la plantilla que usaremos -->
+<!-- index.html actualizado -->
 {% extends "plantilla.html" %}
 
-<!-- Ponemos el contenido de la pagina que ira dentro de la plantilla -->
 {% block contenido %}
 <h2>Taller Apps - Inicio</h2>
 <h4>{{subtitulo}}</h4>
+
+{% if tareas %}
+    <h3>Tareas recientes:</h3>
+    <ul>
+        {% for tarea in tareas %}
+            <li>
+                {{ tarea.titulo }} 
+                <a href="{{ url_for('mostrar_tarea', id=tarea.id) }}">Ver</a>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No hay tareas registradas.</p>
+{% endif %}
 {% endblock %}
-
-
