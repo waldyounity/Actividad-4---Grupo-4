@@ -6,11 +6,20 @@
 <p>En esta sección encontrarás información de la pagina</p>
 
 <!-- PARA ENVIAR EL TOKEN DEL FORMULARIO -->
-<form action="/nosotros" method="post">
+{% if tarea_editar %}
+    <form action="{{ url_for('editar', id=tarea_editar.id) }}" method="post">
+{% else %}
+    <form action="{{ url_for('nosotros') }}" method="post">
+{% endif %}
     {{ form.csrf_token() }}
     {{ form.titulo.label }}
     {{ form.titulo }}
-    {{ form.enviar }}
+    
+    {% if tarea_editar %}
+        <input type="submit" value="Actualizar Tarea">
+    {% else %}
+        {{ form.enviar }}
+    {% endif %}
 </form>
 
 <!-- LISTA DE TAREAS EN TABLA (como pide Waldy) -->
@@ -42,6 +51,10 @@
                 <td>{{ tarea.titulo }}</td>
                 <td>
                     <a href="{{ url_for('mostrar_tarea', id=tarea.id) }}">Ver Detalles</a>
+
+                    <a href="{{ url_for('editar', id=tarea.id) }}" style="margin-left: 10px;">
+                        <button type="button">Editar</button>
+                    </a>
 
                     <form action="{{ url_for('eliminar', id=tarea.id) }}" method="POST" style="display:inline-block; margin-left: 10px;">
                     <button type="submit" onclick="return confirm('¿Estás seguro de que deseas eliminar esta tarea?');">Eliminar</button>

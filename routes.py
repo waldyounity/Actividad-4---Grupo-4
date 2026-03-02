@@ -1,5 +1,5 @@
 #IMPORTAMOS RENDER TEMPLATE
-from flask import render_template, redirect, url_for  # ← AÑADIDO redirect y url_for
+from flask import render_template, redirect, url_for, request  # ← AÑADIDO redirect y url_for
 
 #IMPORTANDO LA APLICACION
 from app import app, db
@@ -66,3 +66,20 @@ def eliminar(id):
 def buscar(titulo):
     tareas = Tarea.query.filter(Tarea.titulo.contains(titulo)).all()
     return render_template('nosotros.html', tareas=tareas)
+
+@app.route('/editar/<int:id>', methods=['GET', 'POST'])
+def editar(id):
+    tarea_a_editar = Tarea.query.get_or_404(id)
+    formulario = formularios.FormAgregarTareas()
+    
+    if formulario.validate_on_submit():
+        tarea_a_editar.titulo = formulario.titulo.data
+        db.session.commit()
+        return redirect(url_for('nosotros'))
+    
+    if request.method == 'GET':
+        formulario.titulo.data = tarea_a_editar.titulo
+        
+    tareas = Tarea.query.all()
+    # Enviamos "tarea_editar" para que el HTML active la condición
+    return render_template('nosotros.html', form=formulario, tareas=tareas, tarea_editar=tarea_a_editar)
